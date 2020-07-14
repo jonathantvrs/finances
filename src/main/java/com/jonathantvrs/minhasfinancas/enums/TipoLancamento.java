@@ -1,8 +1,8 @@
 package com.jonathantvrs.minhasfinancas.enums;
 
 public enum TipoLancamento {
-    DESPESA("DESPESA"),
-    RECEITA("RECEITA");
+    DESPESA("Despesa"),
+    RECEITA("Receita");
 
     public String tipoValue;
 

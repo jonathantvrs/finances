@@ -1,9 +1,9 @@
 package com.jonathantvrs.minhasfinancas.enums;
 
 public enum StatusLancamento {
-    PENDENTE("PENDENTE"),
-    CANCELADO("CANCELADO"),
-    EFETIVADO("EFETIVADO");
+    PENDENTE("Pendente"),
+    CANCELADO("Cancelado"),
+    EFETIVADO("Efetivado");
 
     public String statusValue;
 
