@@ -19,38 +19,70 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Classe que representa um lançamento financeiro no sistema
+ */
 @Entity
 @Table(name = "lancamento", schema = "financas")
 public class Lancamento {
+    /**
+     * Identifica unicamente um lançamento financeiro no sistema
+     */
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Descrição do lançamento financeiro
+     */
     @Column(name = "descricao")
     private String descricao;
 
+    /**
+     * Ano do lançamento financeiro
+     */
     @Column(name = "ano")
     private Integer ano;
 
+    /**
+     * Mês do lançamento financeiro
+     */
     @Column(name = "mes")
     private Integer mes;
 
+    /**
+     * Usuário ao qual pertence o lançamento financeiro
+     */
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    /**
+     * Valor do lançamento financeiro
+     */
     @Column(name = "valor")
     private BigDecimal valor;
 
+    /**
+     * Data de cadastro do lançamento financeiro
+     */
     @Column(name = "data_cadastro")
     @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
     private LocalDate dataCadastro;
 
+    /**
+     * Tipo do lançamento financeiro
+     * Ele pode ser: (Receita, Despesa)
+     */
     @Column(name = "tipo")
     @Enumerated(value = EnumType.STRING)
     private TipoLancamento tipo;
 
+    /**
+     * Status do lançamento financeiro
+     * Ele pode ser: (Pendente, Cancelado, Efetivado)
+     */
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private StatusLancamento status;

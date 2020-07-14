@@ -8,21 +8,36 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
+/**
+ * Classe que representa um usuário no sistema
+ */
 @Entity
 @Table(name = "usuario", schema = "financas")
 public class Usuario {
 
+    /**
+     * Identifica unicamente um usuário no sistema
+     */
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Nome do usuário
+     */
     @Column(name = "nome")
     private String nome;
 
+    /**
+     * Email do usuário
+     */
     @Column(name = "email")
     private String email;
 
+    /**
+     * Senha do usuário
+     */
     @Column(name = "senha")
     private String senha;
 
