@@ -48,7 +48,7 @@ public class UsuarioServiceTest {
     }
 
     @Test
-    @DisplayName("Teste que verifica a mensagem de erro de Email existente")
+    @DisplayName("Teste que verifica a mensagem de exceção de Email existente")
     public void verificaMensagemDeEmailExistente() {
         Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(true);
 
