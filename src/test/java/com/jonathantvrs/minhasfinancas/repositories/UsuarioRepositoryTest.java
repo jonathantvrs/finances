@@ -69,7 +69,7 @@ public class UsuarioRepositoryTest {
     @Test
     @DisplayName("Teste que não encontra Usuário com Email")
     public void buscaUsuarioPorEmailInexistente() {
-        Optional<Usuario> result = repository.findByEmail("usuario2@email.com");
+        Optional<Usuario> result = repository.findByEmail("usuario@email.com");
 
         Assertions.assertFalse(result.isPresent());
     }
