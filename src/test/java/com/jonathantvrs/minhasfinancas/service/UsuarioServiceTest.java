@@ -13,29 +13,54 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 @ActiveProfiles("test")
 public class UsuarioServiceTest {
 
-    private UsuarioService service;
+    @SpyBean
+    private UsuarioServiceImpl service;
     @MockBean
     private UsuarioRepository repository;
+
     private Usuario usuario;
 
     @BeforeEach
     void setUp() {
-        this.service = new UsuarioServiceImpl(this.repository);
         this.usuario = Usuario.builder()
+                .id(1L)
                 .nome("LeonardoVascon")
                 .email("vascon@gmail.com")
                 .senha("123456")
                 .build();
+    }
+
+    @Test
+    @DisplayName("Teste de salvar usuário com sucesso")
+    public void salvaUsuarioComSucesso() {
+        Mockito.doNothing().when(service).validarEmail(Mockito.anyString());
+        Mockito.when(repository.save(Mockito.any(Usuario.class))).thenReturn(this.usuario);
+
+        Usuario u = service.salvarUsuario(new Usuario());
+
+        Assertions.assertEquals(1L, u.getId());
+        Assertions.assertEquals("LeonardoVascon", u.getNome());
+        Assertions.assertEquals("vascon@gmail.com", u.getEmail());
+        Assertions.assertEquals("123456", u.getSenha());
+    }
+
+    @Test
+    @DisplayName("Teste de salvar usuário com usuário já cadastrado")
+    public void naoSalvaUsuarioComEmailCadastrado() {
+        Mockito.doThrow(RegraNegocioException.class).when(service).validarEmail("vascon@gmail.com");
+
+        Assertions.assertThrows(RegraNegocioException.class, () -> service.salvarUsuario(this.usuario));
+        Mockito.verify(repository, Mockito.never()).save(this.usuario);
     }
 
     @Test
