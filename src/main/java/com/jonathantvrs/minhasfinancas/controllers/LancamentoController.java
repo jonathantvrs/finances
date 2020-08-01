@@ -1,5 +1,6 @@
 package com.jonathantvrs.minhasfinancas.controllers;
 
+import com.jonathantvrs.minhasfinancas.dtos.AtualizaStatusDTO;
 import com.jonathantvrs.minhasfinancas.dtos.LancamentoDTO;
 import com.jonathantvrs.minhasfinancas.enums.StatusLancamento;
 import com.jonathantvrs.minhasfinancas.enums.TipoLancamento;
@@ -8,6 +9,7 @@ import com.jonathantvrs.minhasfinancas.models.Lancamento;
 import com.jonathantvrs.minhasfinancas.models.Usuario;
 import com.jonathantvrs.minhasfinancas.service.LancamentoService;
 import com.jonathantvrs.minhasfinancas.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,19 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/lancamentos")
+@RequiredArgsConstructor
 public class LancamentoController {
 
-    private LancamentoService service;
-    private UsuarioService usuarioService;
-
-    public LancamentoController(LancamentoService service, UsuarioService usuarioService) {
-        this.service = service;
-        this.usuarioService = usuarioService;
-    }
+    private final LancamentoService service;
+    private final UsuarioService usuarioService;
 
     @GetMapping
     public ResponseEntity buscar(
@@ -81,6 +80,24 @@ public class LancamentoController {
                 return ResponseEntity.badRequest().body(rne.getMessage());
             }
         }).orElseGet(() -> new ResponseEntity("Lancamento não encontrado", HttpStatus.BAD_REQUEST));
+    }
+
+    @PutMapping("/{id}/atualiza-status")
+    public ResponseEntity atualizarStatus(@PathVariable("id") Long id, @RequestBody AtualizaStatusDTO dto) {
+        return service.obterPorId(id).map(lancamento -> {
+            StatusLancamento status = StatusLancamento.valueOf(dto.getStatus());
+            if (Objects.isNull(status)) {
+                return ResponseEntity.badRequest().body("Não foi possível atualizar status. Envie status válido");
+            }
+            try {
+                lancamento.setStatus(status);
+                service.atualizar(lancamento);
+                return ResponseEntity.ok(lancamento);
+            } catch (RegraNegocioException rne) {
+                return ResponseEntity.badRequest().body(rne.getMessage());
+            }
+        }).orElseGet(() -> new ResponseEntity("Lançamento não encontrado", HttpStatus.BAD_REQUEST));
+
     }
 
     @DeleteMapping("/{id}")
