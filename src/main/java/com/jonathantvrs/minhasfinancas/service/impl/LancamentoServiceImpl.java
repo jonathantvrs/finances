@@ -1,6 +1,7 @@
 package com.jonathantvrs.minhasfinancas.service.impl;
 
 import com.jonathantvrs.minhasfinancas.enums.StatusLancamento;
+import com.jonathantvrs.minhasfinancas.enums.TipoLancamento;
 import com.jonathantvrs.minhasfinancas.exceptions.RegraNegocioException;
 import com.jonathantvrs.minhasfinancas.models.Lancamento;
 import com.jonathantvrs.minhasfinancas.repositories.LancamentoRepository;
@@ -88,5 +89,21 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     public Optional<Lancamento> obterPorId(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal obterSaldoPorUsuario(Long idUsuario) {
+        BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario(idUsuario, TipoLancamento.RECEITA);
+        BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario(idUsuario, TipoLancamento.DESPESA);
+
+        if (Objects.isNull(receitas)) {
+            receitas = BigDecimal.ZERO;
+        }
+        if (Objects.isNull(despesas)) {
+            despesas = BigDecimal.ZERO;
+        }
+
+        return receitas.subtract(despesas);
     }
 }

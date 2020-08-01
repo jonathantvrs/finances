@@ -3,6 +3,7 @@ package com.jonathantvrs.minhasfinancas.service;
 import com.jonathantvrs.minhasfinancas.enums.StatusLancamento;
 import com.jonathantvrs.minhasfinancas.models.Lancamento;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,6 @@ public interface LancamentoService {
     void validar(Lancamento lancamento);
 
     Optional<Lancamento> obterPorId(Long id);
+
+    BigDecimal obterSaldoPorUsuario(Long idUsuario);
 }
